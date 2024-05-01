@@ -1,7 +1,8 @@
 package co.edu.poli.ces3.universitas.Servlet;
 
-import co.edu.poli.ces3.universitas.database.ConexionMySql;
 import co.edu.poli.ces3.universitas.database.Usuario;
+import co.edu.poli.ces3.universitas.database.ConexionMySql;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import javax.servlet.ServletException;
@@ -14,56 +15,57 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@WebServlet(name = "UserServlet", value = "/user")
+@WebServlet(name = "userServlet", value = "/Usuario")
 public class UserServlet extends HttpServlet {
-
     private ConexionMySql cnn;
-
-
-    public void init()  {
-        private cnn = new ConexionMySql();
-        private GsonBuilder gsonBuilder;
-        private Gson
-
-    }
-
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response )
-            throws ServletException, IOException {
-
+    private GsonBuilder gsonBuilder;
+    private Gson gson;
+    public void init() {
+        cnn = new ConexionMySql();
+        gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.create();
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
+    protected void doPut(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+
+        // Hello
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>PUT</h1>");
+        out.println("</body></html>");
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html");
+
+        // Hello
+        PrintWriter out = response.getWriter();
+        out.println("<html><body>");
+        out.println("<h1>POST</h1>");
+        out.println("</body></html>");
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
         try {
-            ArrayList<Usuario> listUsers = (ArrayList<Usuario>) cnn.getUsers();
+            if(request.getParameter("id") == null) {
+                ArrayList<Usuario> listUsers = (ArrayList<Usuario>) cnn.getUsers();
+                PrintWriter out = response.getWriter();
+                out.print(gson.toJson(listUsers));
+                out.flush();
+            }else{
 
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-        }catch (SQLException e)
-
-        PrintWriter writer = resp.getWriter();
-
-        writer.flush();
-        super.doGet(req, resp);
-    }
-
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String id = request.getParameter("id");
-        String name = request.getParameter("name");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        System.out.println("id: "+ id);
-        System.out.println("name: "+ name);
-        System.out.println("lastName: "+ lastName);
-        System.out.println("email: "+ email);
-        System.out.println("contraseña: "+ password);
 
     }
 
+    public void destroy() {
+    }
 }
