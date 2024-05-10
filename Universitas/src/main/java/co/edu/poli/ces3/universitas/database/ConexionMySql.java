@@ -1,5 +1,5 @@
 package co.edu.poli.ces3.universitas.database;
-
+import co.edu.poli.ces3.universitas.logica.Usuario;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +62,23 @@ public class ConexionMySql {
         return usuarios;
     }
 
-
+public  Usuario getUser(String id) throws  SQLException{
+        String sql = "SELECT * FROM users WHERE id = ?";
+        createConexion();
+        try {
+            createConexion();
+            PreparedStatement smt = cnn.prepareStatement(sql);
+            smt.setInt(1, Integer.parseInt(id));
+            ResultSet resultSet = smt.executeQuery();
+            return new Usuario(resultSet.getString("name"), resultSet.getString("lastName"));
+        }catch (SQLException error){
+            error.printStackTrace();
+        }finally {
+            if (cnn != null){
+                cnn.close();
+            }
+            return null;
+        }
+}
 
 }
